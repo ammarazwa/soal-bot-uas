@@ -81,9 +81,9 @@ elif st.session_state.page == 'upload':
     if uploaded_file:
         with open("temp.pdf", "wb") as f:
             f.write(uploaded_file.read())
-        st.success("✅ File berhasil diunggah!")
+        st.success("File berhasil diunggah!")
 
-        if st.button("🔍 Ringkas Materi"):
+        if st.button("Summarize"):
             text = extract_text_from_pdf("temp.pdf")
             summary = generate_summary_llm(text)
             st.session_state.text = text
@@ -98,7 +98,6 @@ elif st.session_state.page == 'ringkasan':
     import tempfile
 
     st.title("📄 Ringkasan Materi")
-
     if 'summary' not in st.session_state:
         st.info("Belum ada ringkasan. Silakan upload materi terlebih dahulu.")
     else:
@@ -118,6 +117,8 @@ elif st.session_state.page == 'ringkasan':
         pdf = PDF()
         pdf.add_page()
         pdf.set_font("Times", size=12)
+        
+        # Cetak ringkasan sebagai satu blok teks dengan justify
         summary_text = st.session_state.summary.replace("\n", " ")
         pdf.multi_cell(0, 10, summary_text, align="J")
 
@@ -216,14 +217,17 @@ elif st.session_state.page == 'soal':
         jawaban_benar.append(correct_answer)
         st.markdown(f"**{i+1}. {question_text}**")
 
+        # Setup state untuk setiap radio key
         if f"radio_key_{i}" not in st.session_state:
             st.session_state[f"radio_key_{i}"] = f"mcq_{i}_v1"
 
+        # Tombol Clear
         if st.button("❌ Clear Choice", key=f"clear_{i}"):
             st.session_state.user_answers[i] = None
             st.session_state[f"radio_key_{i}"] += "_x"
             st.rerun()
 
+        # Render radio dengan key dinamis
         st.session_state.user_answers[i] = st.radio(
             "Pilih jawaban:", options,
             key=st.session_state[f"radio_key_{i}"],
@@ -233,19 +237,19 @@ elif st.session_state.page == 'soal':
         if q['label']:
             st.markdown(f"📊 Tingkat Kesulitan: {q['label']}")
         if q['topic'] is not None:
-            st.markdown(f"🏷️ Topik: {q['topic'] + 1}")
+            st.markdown(f"Topik: {q['topic'] + 1}")
 
     if st.session_state.soal_essay:
-        st.markdown("---\n### ✍️ Soal Essay")
+        st.markdown("---\n### Soal Essay")
         for i, q in enumerate(st.session_state.soal_essay):
             st.markdown(f"{i+1}. {q['question']}")
             if q['label']:
-                st.markdown(f"📊 Tingkat Kesulitan: {q['label']}")
+                st.markdown(f"Tingkat Kesulitan: {q['label']}")
             if q['topic'] is not None:
-                st.markdown(f"🏷️ Topik: {q['topic'] + 1}")
+                st.markdown(f"Topik: {q['topic'] + 1}")
             st.text_area("Jawaban Anda:", key=f"essay_{i}")
 
-    if st.button("✅ Lihat Skor"):
+    if st.button("Lihat Skor"):
         benar = 0
         for i, user_ans in enumerate(st.session_state.user_answers):
             kunci = jawaban_benar[i]
