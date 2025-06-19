@@ -1,6 +1,6 @@
 streamlit==1.33.0
 requests
-fpdf
+fpdf2
 spacy==3.7.2
 scikit-learn
 pandas
