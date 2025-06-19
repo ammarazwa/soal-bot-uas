@@ -2,7 +2,7 @@
 
 **SoalBot** adalah aplikasi AI berbasis Streamlit yang membantu mahasiswa dan pengajar mengubah file materi kuliah (.pdf) menjadi soal pilihan ganda dan esai secara otomatis. Aplikasi ini menggabungkan teknologi LLM (Large Language Model), klasifikasi tingkat kesluitan (Neural Network), dan clustering topic (K-Means).
 
-👉 **Coba langsung di web:** [https://soal-bot.streamlit.app](https://soal-bot.streamlit.app)
+👉 **Coba langsung di web:** [https://soalbot.streamlit.app/](https://soalbot.streamlit.app/)
 
 ---
 
