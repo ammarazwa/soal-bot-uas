@@ -7,6 +7,7 @@ pandas
 numpy
 joblib
 tensorflow
+python-dotenv
 PyMuPDF==1.23.7  # ← tambahkan ini untuk 'import fitz'
 
 # Tambahkan model bahasa untuk spaCy
