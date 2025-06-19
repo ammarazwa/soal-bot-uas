@@ -213,10 +213,10 @@ elif st.session_state.page == 'ringkasan':
         soal_type = st.selectbox("Pilih jenis soal:", ["Pilihan Ganda", "Essay", "Campur"])
         st.session_state.soal_type = soal_type
 
-        if st.button("Generate Soal"):
-            text = st.session_state.text
-            kalimat_list = split_sentences(text)
-            valid_sentences = [s for s in kalimat_list if is_valid_sentence(s)]
+    if st.button("Generate Soal"):
+        text = st.session_state.text
+        kalimat_list = split_sentences(text)
+        valid_sentences = [s for s in kalimat_list if is_valid_sentence(s)]
 
         if not valid_sentences:
             st.warning("❌ Tidak ada kalimat yang layak dijadikan soal.")
@@ -225,12 +225,12 @@ elif st.session_state.page == 'ringkasan':
         soal_mcq = []
         soal_essay = []
 
-        if soal_type == "Essay":
-            soal_essay = generate_bulk_essay_llm(text, num_questions)
-
-        elif soal_type == "Pilihan Ganda":
+        if st.session_state.soal_type == "Essay":
+            soal_essay = generate_bulk_essay_llm(text, st.session_state["num_questions"])
+        
+        elif st.session_state.soal_type == "Pilihan Ganda":
             for kalimat in valid_sentences:
-                if len(soal_mcq) >= num_questions:
+                if len(soal_mcq) >= st.session_state["num_questions"]:
                     break
                 level = predict_difficulty(kalimat)
                 try:
@@ -241,35 +241,42 @@ elif st.session_state.page == 'ringkasan':
                 if soal:
                     soal_mcq.append(soal)
 
-        elif soal_type == "Campur":
+        elif st.session_state.soal_type == "Campur":
             count_mcq = 0
             count_essay = 0
-            for i, kalimat in enumerate(valid_sentences):
-                if count_mcq + count_essay >= num_questions:
+            max_mcq = st.session_state["num_questions"] // 2 + st.session_state["num_questions"] % 2
+            max_essay = st.session_state["num_questions"] // 2
+
+            for kalimat in valid_sentences:
+                if count_mcq >= max_mcq and count_essay >= max_essay:
                     break
                 level = predict_difficulty(kalimat)
                 try:
                     topic = predict_cluster(kalimat)
                 except:
                     topic = None
-                if i % 2 == 0 and count_mcq < (num_questions // 2 + num_questions % 2):
+
+                if count_mcq < max_mcq:
                     soal = generate_mcq_llm(kalimat, label=level, topic=topic)
                     if soal:
                         soal_mcq.append(soal)
                         count_mcq += 1
-                else:
-                    soal_list = generate_bulk_essay_llm(kalimat, 1)
-                    if soal_list:
-                        soal_essay.extend(soal_list)
+                        continue
+
+                if count_essay < max_essay:
+                    essay_list = generate_bulk_essay_llm(kalimat, 1)
+                    if essay_list:
+                        soal_essay.extend(essay_list)
                         count_essay += 1
 
-        # Simpan ke session dan pindah ke halaman soal
+        # Simpan hasil ke session dan lanjut ke halaman soal
         st.session_state.soal_mcq = soal_mcq
         st.session_state.soal_essay = soal_essay
         st.session_state.user_answers = [None] * len(soal_mcq)
         st.session_state.page = 'soal'
         st.session_state.selected_page = "📝 Lihat Soal"
         st.rerun()
+
 
     else:
         st.info("Belum ada ringkasan. Silakan upload materi terlebih dahulu.")
