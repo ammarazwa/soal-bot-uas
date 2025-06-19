@@ -51,22 +51,28 @@ elif selected_page == "📝 Lihat Soal":
 elif selected_page == "📄 Ringkasan":
     st.session_state.page = 'ringkasan'
 
-# ==================== HALAMAN HOME =================
+# ========================== HALAMAN HOME ==========================
 if st.session_state.page == 'home':
+    st.title("🏠 Selamat Datang di SoalBot!")
     st.markdown("""
-    SoalBot adalah aplikasi AI untuk mengubah file materi (.pdf) menjadi soal otomatis.
+    SoalBot adalah aplikasi berbasis AI yang dirancang untuk mengubah file materi (.pdf) menjadi soal otomatis.
+    Kamu bisa menghasilkan soal *Pilihan ganda, esai. atau campuran hanya dengan beberapa klik!
 
-    **Fitur:**
+    Fitur:
     - Ekstraksi materi dari PDF
     - Deteksi tingkat kesulitan kalimat
-    - Generasi soal pilihan ganda & esai HOTS
+    - Generasi soal pilihan ganda HOTS
+    - Generasi soal essay HOTS
     - Evaluasi otomatis jawaban pilihan ganda
 
-    **Cara Menggunakan:**
-    1. Upload file materi
-    2. Pilih jenis & jumlah soal
-    3. Klik "Generate Soal"
-    4. Jawab soal & cek skor
+    Cara Menggunakan:
+    1. Masuk ke halaman Upload Materi
+    2. Unggah file PDF
+    3. Pilih jenis dan jumlah soal
+    4. Klik tombol "Customize Soal"
+    5. Lihat soal dan jawab di halaman Lihat Soal
+
+    Aplikasi ini menggunakan model LLM dan Klasifikasi topik dan tingkat kesulitan untuk membuat soal yang bervariasi dan menantang
     """)
 
 # ==================== HALAMAN UPLOAD =================
